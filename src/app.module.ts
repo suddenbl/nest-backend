@@ -6,6 +6,7 @@ import { TaskModule } from './task/task.module.js';
 import { MovieModule } from './movie/movie.module.js';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { getTypeOrmConfig } from './config/typeorm.config.js';
+import { ReviewModule } from './review/review.module.js';
 
 process.loadEnvFile?.();
 
@@ -21,6 +22,7 @@ process.loadEnvFile?.();
     }),
     TaskModule,
     MovieModule,
+    ReviewModule,
   ],
   controllers: [AppController],
   providers: [AppService],

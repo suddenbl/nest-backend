@@ -3,9 +3,11 @@ import {
   CreateDateColumn,
   Entity,
   UpdateDateColumn,
-  PrimaryColumn,
-  Generated,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  type Relation,
 } from 'typeorm';
+import { ReviewEntity } from '../../review/entities/review.entity.js';
 
 export enum Genre {
   ACTION = 'action',
@@ -20,8 +22,7 @@ export enum Genre {
 
 @Entity({ name: 'movies' })
 export class MovieEntity {
-  @PrimaryColumn()
-  @Generated('uuid')
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column({
@@ -57,6 +58,9 @@ export class MovieEntity {
     default: 0,
   })
   rating: number;
+
+  @OneToMany(() => ReviewEntity, (review) => review.movie)
+  reviews: Relation<ReviewEntity[]>;
 
   @Column({ name: 'is_available', type: 'boolean', default: true })
   isAvailable: boolean;
