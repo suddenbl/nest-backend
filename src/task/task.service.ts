@@ -8,11 +8,13 @@ export class TaskService {
     {
       id: 1,
       title: 'Task 1',
+      description: 'Description 1',
       isCompleted: false,
     },
     {
       id: 2,
       title: 'Task 2',
+      description: 'Description 2',
       isCompleted: true,
     },
   ];
@@ -32,11 +34,14 @@ export class TaskService {
   }
 
   create(dto: CreateTaskDto) {
-    const { title } = dto;
+    const { title, description, priority, tags } = dto;
 
     const newTask = {
       id: this.tasks.length + 1,
       title,
+      description,
+      priority,
+      tags,
       isCompleted: false,
     };
 
@@ -53,6 +58,7 @@ export class TaskService {
     if (title !== undefined) {
       found.title = title;
     }
+
     if (isCompleted !== undefined) {
       found.isCompleted = isCompleted;
     }
