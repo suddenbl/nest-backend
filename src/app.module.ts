@@ -1,12 +1,11 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
-import { TaskModule } from './task/task.module.js';
 import { MovieModule } from './movie/movie.module.js';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { getTypeOrmConfig } from './config/typeorm.config.js';
+import { ConfigModule } from '@nestjs/config';
 import { ReviewModule } from './review/review.module.js';
+import { PrismaModule } from './prisma/prisma.module.js';
+import { ActorModule } from './actor/actor.module.js';
 
 process.loadEnvFile?.();
 
@@ -15,14 +14,10 @@ process.loadEnvFile?.();
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: getTypeOrmConfig,
-      inject: [ConfigService],
-    }),
-    TaskModule,
+    PrismaModule,
     MovieModule,
     ReviewModule,
+    ActorModule,
   ],
   controllers: [AppController],
   providers: [AppService],

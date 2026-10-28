@@ -6,9 +6,7 @@ import {
   Max,
   Min,
 } from 'class-validator';
-import { Entity } from 'typeorm';
 
-@Entity()
 export class CreateReviewDto {
   @IsString()
   text: string;

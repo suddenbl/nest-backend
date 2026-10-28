@@ -1,39 +1,43 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { ReviewEntity } from './entities/review.entity.js';
-import { Repository } from 'typeorm';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service.js';
 import { CreateReviewDto } from './dto/create-review.dto.js';
 import { MovieService } from '../movie/movie.service.js';
+import { Review } from '@prisma/client';
 
 @Injectable()
 export class ReviewService {
   constructor(
-    @InjectRepository(ReviewEntity)
-    private readonly reviewRepository: Repository<ReviewEntity>,
+    private readonly prisma: PrismaService,
     private readonly movieService: MovieService,
   ) {}
 
-  public async findAll() {
-    return await this.reviewRepository.find();
+  public async findAll(): Promise<Review[]> {
+    return await this.prisma.review.findMany();
   }
 
-  public async findOne(id: string) {
-    return await this.reviewRepository.findOne({
+  public async findOne(id: string): Promise<Review> {
+    const found = await this.prisma.review.findUnique({
       where: { id },
     });
+
+    if (!found) {
+      throw new NotFoundException('Отзыв не найден');
+    }
+
+    return found;
   }
 
-  public async create(dto: CreateReviewDto): Promise<ReviewEntity> {
+  public async create(dto: CreateReviewDto): Promise<Review> {
     const { movieId, rating, text } = dto;
 
     await this.movieService.findOne(movieId);
 
-    const review = this.reviewRepository.create({
-      text,
-      rating,
-      movieId,
+    return await this.prisma.review.create({
+      data: {
+        text,
+        rating,
+        movieId,
+      },
     });
-
-    return await this.reviewRepository.save(review);
   }
 }
